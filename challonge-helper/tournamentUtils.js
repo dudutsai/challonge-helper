@@ -1,8 +1,10 @@
 var constants = require('./constants');
 var request = require('request');
+var async = require('async');
+var _ = require('lodash');
 
 exports.getTournaments = function(callback) {
-	console.log('getTournaments start!');
+	console.log('getTournaments() start!');
 
 	request({
 		uri: constants.url + '.json',
@@ -16,7 +18,7 @@ exports.getTournaments = function(callback) {
 };
 
 exports.getTournament = function(id, callback) {
-	console.log('getTournament start!');
+	console.log('getTournament() start!');
 
 	request({
 		uri: constants.url + '/' + id + '.json',
@@ -29,14 +31,13 @@ exports.getTournament = function(id, callback) {
 	});
 };
 
-exports.deleteTournaments = function(err, tournamentData) {
+exports.deleteTournaments = function(tournamentData, callback) {
 	console.log('deleteTournaments() start!');
 
   	data = JSON.parse(tournamentData);
 
-  	for (var i = 0; i < data.length; i++) {
-		var tournament_id = data[i]['tournament']['id'];
-		console.log('Deleting tournament with id ' + tournament_id);
+  	async.forEachOf(_.values(data), function(item, key, callback) {
+  		tournament_id = item['tournament']['id'];
 		var options = {
 			uri: constants.url + '/' + tournament_id + '.json',
 			method: 'DELETE'
@@ -44,16 +45,23 @@ exports.deleteTournaments = function(err, tournamentData) {
 		request(options, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 			    console.log('Tournament sucessfully deleted'); // Print the shortened url.
-			    //callback(null, 'done');
+			    callback();
 			}
 			else {
 				console.log('Error deleting tournament: ' + tournament_id);
+				callback();
 			}
 		});
-	}
+  	}, function(err) {
+  		if (err) {
+  			console.log('Error = ' + err);
+  		}
+  		callback(null, 'deleteTournaments done');
+	});
+
 };
 
-exports.createTournament = function() {
+exports.createTournament = function(callback) {
 	console.log('createTournament() start!');
 
 	var date = new Date();
@@ -73,10 +81,10 @@ exports.createTournament = function() {
 	request(options, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
 	    console.log('Tournament sucessfully created'); // Print the shortened url.
-	    return true;
+	    callback(null, 'createTournament done');
 	  }
 	  else {
-	  	return false;
+	  	callback(error);
 	  }
 	});
 };

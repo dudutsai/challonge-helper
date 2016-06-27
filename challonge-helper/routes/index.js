@@ -27,26 +27,31 @@ router.post('/submit', function(req, res, next) {
 	console.log('req.body = ' + JSON.stringify(req.body));
 	switch (req.body.action) {
 		case 'createTournament':
-			console.log('createTournament() call');
-			tools.createTournament();
-			break;
-		case 'deleteTournaments':
-			console.log('deleteTournaments() call');
-			/*
-			async.waterfall([
-				tools.getTournaments(),
-				tools.deleteTournaments()
+			console.log('createTournament call');
+			async.series([
+				tools.createTournament,
 			], function(err, result) {
 				console.log('result = ' + result);
+				res.redirect('/');
 			});
-			*/
-			tools.getTournaments(tools.deleteTournaments);
+			break;
+		case 'deleteTournaments':
+			console.log('deleteTournaments call');
+			async.waterfall([
+				tools.getTournaments,
+				tools.deleteTournaments
+			], function(err, result) {
+				console.log('result = ' + result);
+				res.redirect('/');
+			});
+			
+			//tools.getTournaments(tools.deleteTournaments);
 			break;
 		default:
 			break;
 
 	}
-	res.redirect('/');
+	//res.redirect('/');
 });
 
 
