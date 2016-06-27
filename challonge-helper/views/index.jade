@@ -1,0 +1,21 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    header
+      nav      
+        div
+          form(action='/submit',method='post')
+            input(type='hidden' name='action' value='createTournament')
+            input(type='submit', value='Create Tournament', data-transition='fade', data-theme='c')
+          form(action='/submit',method='post')
+            input(type='hidden' name='action' value='deleteTournaments')
+            input(type='submit', value='Delete Tournaments', data-transition='fade', data-theme='c')
+        div
+          table
+            tbody
+              each val, key in tournamentData
+                tr
+                  td
+                    a(href="tournament?id=#{val.tournament.id}") #{val.tournament.name} - #{val.tournament.id}
