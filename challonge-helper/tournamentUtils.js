@@ -2,6 +2,7 @@ var constants = require('./constants');
 var request = require('request');
 var async = require('async');
 var _ = require('lodash');
+var hashmap = require('hashmap');
 
 exports.getTournaments = function(callback) {
 	console.log('getTournaments() start!');
@@ -47,6 +48,30 @@ exports.getMatches = function(id, callback) {
 		console.log('getMatches() done!');
 		callback(null, body);
 		
+	});
+};
+
+exports.getPlayerMapping = function(id, callback) {
+	//console.log('uri = ' + constants.url + '/' + id + '/participants.json');
+	request({
+		uri: constants.url + '/' + id + '/participants.json',
+		method: "GET"
+	}, function(error, response, body) {
+		if (error) {
+			console.error('Get participants error!' + error);
+		}
+		mapping = [];
+		playerData = JSON.parse(body);
+
+		for (player in playerData) {
+			console.log('player = ' + player);
+			console.log('playerData = ' + playerData);
+			console.log('playerData[player].participant.id = ' + playerData[player].participant.id);
+			console.log('playerData[player].participant.name = ' + playerData[player].participant.display_name);
+			mapping[playerData[player].participant.id.toString()] = playerData[player].participant.display_name;
+		}
+		//console.log('mapping = ' + mapping);
+		callback(null, mapping);		
 	});
 };
 

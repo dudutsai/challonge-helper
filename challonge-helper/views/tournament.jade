@@ -19,4 +19,4 @@ html
               each val, key in matchData
                 tr
                   td
-                    | #{val.match.player1_id}  vs #{val.match.player2_id} - #{val.match.scores_csv}
+                    | #{playerMap[val.match.player1_id]}  vs #{playerMap[val.match.player2_id]} - #{val.match.scores_csv}

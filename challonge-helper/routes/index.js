@@ -21,13 +21,17 @@ router.get('/tournament', function(req, res) {
   		},
   		function(callback) {
   			tools.getTournament(req.query.id, callback);
+  		},
+  		function(callback) {
+  			tools.getPlayerMapping(req.query.id, callback);
   		}
   	], function(err, result) {
   		//console.log('result = ' + result);
     	res.render('tournament', {
     		title: JSON.parse(result[1]).tournament.name,
+    		matchData: JSON.parse(result[0]),
     		tournamentData: JSON.parse(result[1]),
-    		matchData: JSON.parse(result[0])
+    		playerMap: result[2]
     	});
   	});
 });
@@ -50,7 +54,7 @@ router.post('/submit', function(req, res, next) {
 				tools.getTournaments,
 				tools.deleteTournaments
 			], function(err, result) {
-				console.log('result = ' + result);
+				//console.log('result = ' + result);
 				res.redirect('/');
 			});
 			
