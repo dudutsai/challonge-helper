@@ -12,4 +12,11 @@ html
           form(action='/submit',method='post')
             input(type='hidden' name='action' value='deleteTournaments')
             input(type='submit', value='Delete Tournaments', data-transition='fade', data-theme='c')
-        a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
+          a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
+        div
+          table
+            tbody
+              each val, key in matchData
+                tr
+                  td
+                    | #{val.match.player1_id}  vs #{val.match.player2_id} - #{val.match.scores_csv}

@@ -18,7 +18,7 @@ exports.getTournaments = function(callback) {
 };
 
 exports.getTournament = function(id, callback) {
-	console.log('getTournament() start!');
+	//console.log('getTournament() start! | id = ' + id + ' | callback = ' + callback);
 
 	request({
 		uri: constants.url + '/' + id + '.json',
@@ -27,7 +27,26 @@ exports.getTournament = function(id, callback) {
 		if (error) {
 			console.error('Get tournament error! ' + error);
 		}
-		return callback(null, body);
+		//console.log('getTournament body = ' + body);
+		console.log('getTournament() done!');
+		callback(null, body);
+	});
+};
+
+exports.getMatches = function(id, callback) {
+	//console.log('getMatches() start! | id = ' + id + ' | callback = ' + callback);
+
+	request({
+		uri: constants.url + '/' + id + '/matches.json',
+		method: "GET"
+	}, function(error, response, body) {
+		if (error) {
+			console.error('Get matches error!' + error);
+		}
+		//console.log('getMatches body = ' + body);
+		console.log('getMatches() done!');
+		callback(null, body);
+		
 	});
 };
 

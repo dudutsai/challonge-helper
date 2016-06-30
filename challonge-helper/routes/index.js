@@ -12,15 +12,24 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/tournament', function(req, res) {
-  console.log('tournament call');
+	console.log('tournament call');
+  	console.log('req.query.id = ' + req.query.id);
 
-  tools.getTournament(req.query.id, function(err, body) {
-  	console.log('body = ' + JSON.parse(body));
-    res.render('tournament', {
-      title: JSON.parse(body).tournament.name,
-      tournamentData: JSON.parse(body)
-    });
-  });
+  	async.parallel([
+  		function(callback) {
+			tools.getMatches(req.query.id, callback);
+  		},
+  		function(callback) {
+  			tools.getTournament(req.query.id, callback);
+  		}
+  	], function(err, result) {
+  		//console.log('result = ' + result);
+    	res.render('tournament', {
+    		title: JSON.parse(result[1]).tournament.name,
+    		tournamentData: JSON.parse(result[1]),
+    		matchData: JSON.parse(result[0])
+    	});
+  	});
 });
 
 router.post('/submit', function(req, res, next) {
@@ -53,6 +62,5 @@ router.post('/submit', function(req, res, next) {
 	}
 	//res.redirect('/');
 });
-
 
 module.exports = router;
