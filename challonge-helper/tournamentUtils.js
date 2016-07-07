@@ -36,7 +36,7 @@ exports.getTournament = function(id, callback) {
 
 exports.getMatches = function(id, callback) {
 	//console.log('getMatches() start! | id = ' + id + ' | callback = ' + callback);
-
+	console.log(constants.url + '/' + id + '/matches.json');
 	request({
 		uri: constants.url + '/' + id + '/matches.json',
 		method: "GET"
@@ -60,17 +60,15 @@ exports.getPlayerMapping = function(id, callback) {
 		if (error) {
 			console.error('Get participants error!' + error);
 		}
-		mapping = [];
+		mapping = {};
 		playerData = JSON.parse(body);
 
 		for (player in playerData) {
-			console.log('player = ' + player);
-			console.log('playerData = ' + playerData);
-			console.log('playerData[player].participant.id = ' + playerData[player].participant.id);
-			console.log('playerData[player].participant.name = ' + playerData[player].participant.display_name);
-			mapping[playerData[player].participant.id.toString()] = playerData[player].participant.display_name;
+			mapping[playerData[player].participant.id] = playerData[player].participant.display_name;
+
+			//console.log('mapping[' + playerData[player].participant.id + '] = ' + mapping[playerData[player].participant.id]);
 		}
-		//console.log('mapping = ' + mapping);
+		//console.log('mapping = ' + JSON.stringify(mapping));
 		callback(null, mapping);		
 	});
 };
@@ -109,15 +107,15 @@ exports.createTournament = function(callback) {
 	console.log('createTournament() start!');
 
 	var date = new Date();
-	var tournament_name = 'TestTourney' + (date.getMonth()+1) + date.getDate() + date.getMinutes() + date.getSeconds();
+	var tournamentName = 'TestTourney' + (date.getMonth()+1) + date.getDate() + date.getMinutes() + date.getSeconds();
 
 	var options = {
 		uri: constants.url + '.json',
 		method: 'POST',
 		json: {
-			'name':tournament_name,
+			'name':tournamentName,
 			'tournament_type':'double elimination',
-			'url':tournament_name,
+			'url':tournamentName,
 			'description':'test description',
 			'open_signup':'false',
 		}
@@ -130,5 +128,61 @@ exports.createTournament = function(callback) {
 	  else {
 	  	callback(error);
 	  }
+	});
+};
+
+exports.addParticipants = function(tournamentName, participantList, callback) {
+	//console.log('addParticipants() start!');
+
+	//console.log('tournamentName = ' + tournamentName);
+	console.log('participant = ' + participantList);
+
+  	async.forEachOf(participantList, function(item, key, callback) {				
+		
+  		console.log('item = ' + item);
+
+		var options = {
+			uri: constants.url + '/' + tournamentName + '/participants.json',
+			method: 'POST',
+			json: {
+				'name': item
+			}
+		};
+		request(options, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+		    console.log('Participants successfully added'); // Print the shortened url.
+		    callback();
+		  }
+		  else {
+		  	console.log('error = ' + error);
+		  	callback();
+		  }
+		});
+
+  	}, function(err) {
+  		if (err) {
+  			console.log('Error = ' + err);
+  		}
+
+  		callback(null, 'addParticipants done');
+	});
+
+};
+
+exports.startTournament = function(tournamentName, callback) {
+	console.log('startTournament start');
+
+	var options = {
+		uri: constants.url + '/' + tournamentName + '/start.json',
+		method: 'POST',
+	};
+	request(options, function (error, response, body) {
+	  	if (!error && response.statusCode == 200) {
+	    	console.log('Tournament sucessfully started'); // Print the shortened url.
+	    	callback(null, 'startTournament done');
+	  	}
+	  	else {
+	  		callback(error);
+	  	}
 	});
 };

@@ -4,19 +4,30 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     header
-      nav      
+      nav
         div
           form(action='/',method='get')
-            input(type='hidden' name='action')
             input(type='submit', value='Back To Index', data-transition='fade', data-theme='c')
           form(action='/submit',method='post')
-            input(type='hidden' name='action' value='deleteTournaments')
-            input(type='submit', value='Delete Tournaments', data-transition='fade', data-theme='c')
+            input(type='hidden' name='action' value='addParticipants')
+            input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
+            input(type='submit', value='Add Participants', data-transition='fade', data-theme='c')
+          form(action='/submit',method='post')
+            input(type='hidden' name='action' value='startTournament')
+            input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
+            input(type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
           a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
         div
+          h1
+            | Players:
           table
             tbody
+              each val in playerMap
+                tr
+                  td
+                    | #{val}
               each val, key in matchData
                 tr
                   td
-                    | #{playerMap[val.match.player1_id]}  vs #{playerMap[val.match.player2_id]} - #{val.match.scores_csv}
+                    if val.match.state == 'open'
+                      a(href="match?player1=#{playerMap[val.match.player1_id]}&player2=#{playerMap[val.match.player2_id]}&tournamentId=#{tournamentData.tournament.id}") #{playerMap[val.match.player1_id]}  vs #{playerMap[val.match.player2_id]} - #{val.match.scores_csv}

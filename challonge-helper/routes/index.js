@@ -36,6 +36,19 @@ router.get('/tournament', function(req, res) {
   	});
 });
 
+router.get('/match', function(req, res) {
+	console.log('match call');
+//	console.log('req.query.matchId = ' + req.query.matchId);
+//	console.log('req.query.tournamentId = ' + req.query.tournamentId);
+
+
+	res.render('match', {
+		player1: req.query.player1,
+		player2: req.query.player2,
+		tournamentId: req.query.tournamentId
+	});
+});
+
 router.post('/submit', function(req, res, next) {
 	console.log('req.body = ' + JSON.stringify(req.body));
 	switch (req.body.action) {
@@ -57,8 +70,35 @@ router.post('/submit', function(req, res, next) {
 				//console.log('result = ' + result);
 				res.redirect('/');
 			});
-			
+			break;
+		case 'addParticipants':
+			console.log('addParticipants call');
+
+			var tempArray = ['andrew', 'alex', 'howard', 'kevin', 'theo', 'matt', 'dylan', 'nick', 'anthony'];
+
+			async.series([
+				function(callback) {
+					tools.addParticipants(req.body.tournamentName, tempArray, callback);
+				}
+			], function(err, result) {
+				console.log('result = ' + result);
+				res.redirect('/tournament?id=' + req.body.tournamentName);
+			});
+
 			//tools.getTournaments(tools.deleteTournaments);
+			break;
+		case 'startTournament':
+			console.log('startTournament call');
+			
+			async.series([
+				function(callback) {
+					tools.startTournament(req.body.tournamentName, callback);
+				}
+			], function(err, result) {
+				console.log('result = ' + result);
+				res.redirect('/tournament?id=' + req.body.tournamentName);
+			});
+
 			break;
 		default:
 			break;
