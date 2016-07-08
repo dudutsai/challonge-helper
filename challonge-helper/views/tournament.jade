@@ -30,4 +30,4 @@ html
                 tr
                   td
                     if val.match.state == 'open'
-                      a(href="match?player1=#{playerMap[val.match.player1_id]}&player2=#{playerMap[val.match.player2_id]}&tournamentId=#{tournamentData.tournament.id}") #{playerMap[val.match.player1_id]}  vs #{playerMap[val.match.player2_id]} - #{val.match.scores_csv}
+                      a(href="match?p1=#{playerMap[val.match.player1_id]}&p1Id=#{val.match.player1_id}&p2=#{playerMap[val.match.player2_id]}&p2Id=#{val.match.player2_id}&tournamentId=#{tournamentData.tournament.id}&matchId=#{val.match.id}") #{playerMap[val.match.player1_id]}  vs #{playerMap[val.match.player2_id]} - #{val.match.scores_csv}

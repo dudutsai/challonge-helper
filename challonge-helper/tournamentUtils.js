@@ -117,7 +117,7 @@ exports.createTournament = function(callback) {
 			'tournament_type':'double elimination',
 			'url':tournamentName,
 			'description':'test description',
-			'open_signup':'false',
+			'open_signup':'false'
 		}
 	};
 	request(options, function (error, response, body) {
@@ -180,6 +180,33 @@ exports.startTournament = function(tournamentName, callback) {
 	  	if (!error && response.statusCode == 200) {
 	    	console.log('Tournament sucessfully started'); // Print the shortened url.
 	    	callback(null, 'startTournament done');
+	  	}
+	  	else {
+	  		callback(error);
+	  	}
+	});
+};
+
+exports.reportScore = function(tournamentId, matchId, scoresCsv, winnerId, callback) {
+	console.log('reportScores start');
+
+	console.log('tournamentId = ' + tournamentId);
+	console.log('matchId = ' + matchId);
+	console.log('scoresCsv = ' + scoresCsv);
+	console.log('winnerId = ' + winnerId);
+	console.log(constants.url + '/' + tournamentId + '/matches/' + matchId + '.json');
+	var options = {
+		uri: constants.url + '/' + tournamentId + '/matches/' + matchId + '.json',
+		method: 'PUT',
+		json: {
+			'scores_csv': scoresCsv,
+			'winner_id': winnerId
+		}
+	};
+	request(options, function (error, response, body) {
+	  	if (!error && response.statusCode == 200) {
+	    	console.log('Match sucessfully reported'); // Print the shortened url.
+	    	callback(null, 'reportScores done');
 	  	}
 	  	else {
 	  		callback(error);

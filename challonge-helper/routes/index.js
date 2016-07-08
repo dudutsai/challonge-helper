@@ -41,11 +41,13 @@ router.get('/match', function(req, res) {
 //	console.log('req.query.matchId = ' + req.query.matchId);
 //	console.log('req.query.tournamentId = ' + req.query.tournamentId);
 
-
 	res.render('match', {
-		player1: req.query.player1,
-		player2: req.query.player2,
-		tournamentId: req.query.tournamentId
+		p1: req.query.p1,
+		p1Id: req.query.p1Id,
+		p2: req.query.p2,
+		p2Id: req.query.p2Id,
+		tournamentId: req.query.tournamentId,
+		matchId: req.query.matchId
 	});
 });
 
@@ -97,6 +99,19 @@ router.post('/submit', function(req, res, next) {
 			], function(err, result) {
 				console.log('result = ' + result);
 				res.redirect('/tournament?id=' + req.body.tournamentName);
+			});
+
+			break;
+		case 'reportScore':
+			console.log('reportScore call');
+
+			async.series([
+				function(callback) {
+					tools.reportScore(req.body.tournamentId, req.body.matchId, req.body.scoresCsv, req.body.winnerId, callback);
+				}
+			], function(err, result) {
+				console.log('result = ' + result);
+				res.redirect('/tournament?id=' + req.body.tournamentId);
 			});
 
 			break;
