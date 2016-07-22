@@ -37,8 +37,19 @@ html
               tr
                 td
                   | #{val}
+            tr
+              td
+                | High Priority Matches (Losers bracket):
             each val, key in matchData
-              tr
-                td
-                  if val.match.state == 'open'
+              if (val.match.state) == 'open' && (val.match.round < 0)
+                tr
+                  td
                     a(href="match?p1=#{playerMap[val.match.player1_id]}&p1Id=#{val.match.player1_id}&p2=#{playerMap[val.match.player2_id]}&p2Id=#{val.match.player2_id}&tournamentId=#{tournamentData.tournament.id}&matchId=#{val.match.id}") #{playerMap[val.match.player1_id]}  vs #{playerMap[val.match.player2_id]}
+            tr
+              td
+                | Lower Priority Matches (Winners Bracket):
+            each val, key in matchData
+              if (val.match.state) == 'open' && (val.match.round > 0)
+                tr
+                  td
+                    a(href="match?p1=#{playerMap[val.match.player1_id]}&p1Id=#{val.match.player1_id}&p2=#{playerMap[val.match.player2_id]}&p2Id=#{val.match.player2_id}&tournamentId=#{tournamentData.tournament.id}&matchId=#{val.match.id}") #{playerMap[val.match.player1_id]}  vs #{playerMap[val.match.player2_id]}                      
