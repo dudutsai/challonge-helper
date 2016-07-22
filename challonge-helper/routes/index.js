@@ -73,21 +73,18 @@ router.post('/submit', function(req, res, next) {
 				res.redirect('/');
 			});
 			break;
-		case 'addParticipants':
-			console.log('addParticipants call');
-
-			var tempArray = ['andrew', 'alex', 'howard', 'kevin', 'theo', 'matt', 'dylan', 'nick', 'anthony'];
+		case 'addParticipant':
+			console.log('addParticipant call');
 
 			async.series([
 				function(callback) {
-					tools.addParticipants(req.body.tournamentName, tempArray, callback);
+					tools.addParticipant(req.body.tournamentName, req.body.participant, callback);
 				}
 			], function(err, result) {
 				console.log('result = ' + result);
 				res.redirect('/tournament?id=' + req.body.tournamentName);
 			});
 
-			//tools.getTournaments(tools.deleteTournaments);
 			break;
 		case 'startTournament':
 			console.log('startTournament call');
@@ -107,7 +104,7 @@ router.post('/submit', function(req, res, next) {
 
 			async.series([
 				function(callback) {
-					tools.reportScore(req.body.tournamentId, req.body.matchId, req.body.scoresCsv, req.body.winnerId, callback);
+					tools.reportScore(req.body.tournamentId, req.body.matchId, req.body.winnerId, req.body.scoresCsv, callback);			
 				}
 			], function(err, result) {
 				console.log('result = ' + result);

@@ -131,41 +131,28 @@ exports.createTournament = function(callback) {
 	});
 };
 
-exports.addParticipants = function(tournamentName, participantList, callback) {
+exports.addParticipant = function(tournamentName, participant, callback) {
 	//console.log('addParticipants() start!');
 
-	//console.log('tournamentName = ' + tournamentName);
-	console.log('participant = ' + participantList);
-
-  	async.forEachOf(participantList, function(item, key, callback) {				
-		
-  		console.log('item = ' + item);
-
-		var options = {
-			uri: constants.url + '/' + tournamentName + '/participants.json',
-			method: 'POST',
-			json: {
-				'name': item
-			}
-		};
-		request(options, function (error, response, body) {
-		  if (!error && response.statusCode == 200) {
-		    console.log('Participants successfully added'); // Print the shortened url.
-		    callback();
-		  }
-		  else {
-		  	console.log('error = ' + error);
-		  	callback();
-		  }
-		});
-
-  	}, function(err) {
-  		if (err) {
-  			console.log('Error = ' + err);
-  		}
-
-  		callback(null, 'addParticipants done');
+	var options = {
+		uri: constants.url + '/' + tournamentName + '/participants.json',
+		method: 'POST',
+		json: {
+			'name': participant
+		}
+	};
+	request(options, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+	    	console.log('Participant ' + participant + ' successfully added'); // Print the shortened url.
+	    	callback(null, 'addParticipant done');
+	  	}
+	  	else {
+	  		console.log('error = ' + error);
+	  		callback();
+	  	}
 	});
+//	callback(null, 'addParticipants done');
+
 
 };
 
@@ -187,26 +174,31 @@ exports.startTournament = function(tournamentName, callback) {
 	});
 };
 
-exports.reportScore = function(tournamentId, matchId, scoresCsv, winnerId, callback) {
+exports.reportScore = function(tournamentId, matchId, winnerId, scoresCsv, callback) {
 	console.log('reportScores start');
 
-	console.log('tournamentId = ' + tournamentId);
-	console.log('matchId = ' + matchId);
-	console.log('scoresCsv = ' + scoresCsv);
-	console.log('winnerId = ' + winnerId);
-	console.log(constants.url + '/' + tournamentId + '/matches/' + matchId + '.json');
+	// console.log('tournamentId = ' + tournamentId);
+	// console.log('matchId = ' + matchId);
+	// console.log('winnerId = ' + winnerId);
+	// console.log('p1v = ' + p1votes);
+	// console.log('p2v = ' + p2votes);
+
+	var url = "https://api.challonge.com/v1/tournaments/" + tournamentId + "/matches/" + matchId 
+		+ ".json?api_key=" + constants.api_key
+		+ "&match[winner_id]=" + winnerId 
+		+"&match[scores_csv]=" + scoresCsv;
+
+	console.log('url = ' + url);
+
 	var options = {
-		uri: constants.url + '/' + tournamentId + '/matches/' + matchId + '.json',
+		uri: url,
 		method: 'PUT',
-		json: {
-			'scores_csv': scoresCsv,
-			'winner_id': winnerId
-		}
+		json: true
 	};
 	request(options, function (error, response, body) {
 	  	if (!error && response.statusCode == 200) {
 	    	console.log('Match sucessfully reported'); // Print the shortened url.
-	    	callback(null, 'reportScores done');
+	    	callback(null, 'response = ' + JSON.stringify(response) + '  body = ' + JSON.stringify(body));
 	  	}
 	  	else {
 	  		callback(error);
