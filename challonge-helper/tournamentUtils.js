@@ -34,7 +34,7 @@ exports.getTournament = function(id, callback) {
 	});
 };
 
-exports.getMatches = function(id, callback) {
+exports.getOpenMatches = function(id, callback) {
 	//console.log('getMatches() start! | id = ' + id + ' | callback = ' + callback);
 	console.log(constants.url + '/' + id + '/matches.json');
 	request({
@@ -45,8 +45,24 @@ exports.getMatches = function(id, callback) {
 			console.error('Get matches error!' + error);
 		}
 		//console.log('getMatches body = ' + body);
+		body = JSON.parse(body);
+		matches = [];
+		for (i in body) {
+			console.log('match id = ' + body[i].match.id);
+			if (body[i].match.state == 'open') {
+				matches.push(body[i].match);
+			}
+		}
+		console.log('matches = ' + matches);
+		matches.sort(function(a, b) {
+			if (a.round < 0 && b.round < 0) {
+				return b.round - a.round;
+			}
+			return a.round - b.round;
+		});
+		console.log('matches = ' + JSON.stringify(matches));
 		console.log('getMatches() done!');
-		callback(null, body);
+		callback(null, matches);
 		
 	});
 };

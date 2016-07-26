@@ -17,7 +17,7 @@ router.get('/tournament', function(req, res) {
 
   	async.parallel([
   		function(callback) {
-			tools.getMatches(req.query.id, callback);
+			tools.getOpenMatches(req.query.id, callback);
   		},
   		function(callback) {
   			tools.getTournament(req.query.id, callback);
@@ -29,7 +29,7 @@ router.get('/tournament', function(req, res) {
   		//console.log('result = ' + result);
     	res.render('tournament', {
     		title: JSON.parse(result[1]).tournament.name,
-    		matchData: JSON.parse(result[0]),
+    		matchData: result[0],
     		tournamentData: JSON.parse(result[1]),
     		playerMap: result[2]
     	});
