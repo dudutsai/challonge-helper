@@ -8,12 +8,7 @@ html
         div
           form(action='/', method='get')
             input(type='submit', value='Back To Index', data-transition='fade', data-theme='c')
-          form(action='/submit', method='post')
-            input(type='hidden' name='action' value='addParticipant')
-            input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
-            input(type='submit', value='Add Participants', data-transition='fade', data-theme='c')
-          form(action='/submit', method='post')
-            input(type='hidden' name='action' value='startTournament')
+          form(action='/startTournament', method='post')
             input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
             input(type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
           a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
@@ -24,9 +19,8 @@ html
                 option  
                   | #{val}
         div
-        form(action='/submit', method='post')
+        form(action='/addParticipant', method='post')
           input(type='text', name='participant')
-          input(type='hidden', name='action', value='addParticipant')
           input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
           input(type='submit', value='Add', data-transition='fade', data-theme='c')
         h1

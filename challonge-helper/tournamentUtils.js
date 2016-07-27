@@ -36,7 +36,7 @@ exports.getTournament = function(id, callback) {
 
 exports.getOpenMatches = function(id, callback) {
 	//console.log('getMatches() start! | id = ' + id + ' | callback = ' + callback);
-	console.log(constants.url + '/' + id + '/matches.json');
+	//console.log(constants.url + '/' + id + '/matches.json');
 	request({
 		uri: constants.url + '/' + id + '/matches.json',
 		method: "GET"
@@ -48,20 +48,20 @@ exports.getOpenMatches = function(id, callback) {
 		body = JSON.parse(body);
 		matches = [];
 		for (i in body) {
-			console.log('match id = ' + body[i].match.id);
+			//console.log('match id = ' + body[i].match.id);
 			if (body[i].match.state == 'open') {
 				matches.push(body[i].match);
 			}
 		}
-		console.log('matches = ' + matches);
+		//console.log('matches = ' + matches);
 		matches.sort(function(a, b) {
 			if (a.round < 0 && b.round < 0) {
 				return b.round - a.round;
 			}
 			return a.round - b.round;
 		});
-		console.log('matches = ' + JSON.stringify(matches));
-		console.log('getMatches() done!');
+		//console.log('matches = ' + JSON.stringify(matches));
+		console.log('getOpenMatches() done!');
 		callback(null, matches);
 		
 	});
@@ -84,7 +84,7 @@ exports.getPlayerMapping = function(id, callback) {
 
 			//console.log('mapping[' + playerData[player].participant.id + '] = ' + mapping[playerData[player].participant.id]);
 		}
-		//console.log('mapping = ' + JSON.stringify(mapping));
+		console.log('getPlayerMapping() done!');
 		callback(null, mapping);		
 	});
 };
@@ -159,11 +159,11 @@ exports.addParticipant = function(tournamentName, participant, callback) {
 	};
 	request(options, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
-	    	console.log('Participant ' + participant + ' successfully added'); // Print the shortened url.
+	    	console.log('Participant "' + participant + '" successfully added'); // Print the shortened url.
 	    	callback(null, 'addParticipant done');
 	  	}
 	  	else {
-	  		console.log('error = ' + error);
+	  		console.log('error = ' + JSON.stringify(response.body.errors));
 	  		callback();
 	  	}
 	});

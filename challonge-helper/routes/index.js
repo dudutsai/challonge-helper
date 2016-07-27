@@ -12,9 +12,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/tournament', function(req, res) {
-	console.log('tournament call');
-  	console.log('req.query.id = ' + req.query.id);
-
+	//console.log('tournament call');
+  	//console.log('req.query.id = ' + req.query.id);
   	async.parallel([
   		function(callback) {
 			tools.getOpenMatches(req.query.id, callback);
@@ -51,11 +50,11 @@ router.get('/match', function(req, res) {
 	});
 });
 
-router.post('/submit', function(req, res, next) {
-	console.log('req.body = ' + JSON.stringify(req.body));
-	switch (req.body.action) {
+router.post('/:action', function(req, res, next) {
+	console.log('action = ' + JSON.stringify(req.params.action));
+	switch (req.params.action) {
 		case 'createTournament':
-			console.log('createTournament call');
+			//console.log('createTournament call');
 			async.series([
 				tools.createTournament,
 			], function(err, result) {
@@ -64,7 +63,7 @@ router.post('/submit', function(req, res, next) {
 			});
 			break;
 		case 'deleteTournaments':
-			console.log('deleteTournaments call');
+			//console.log('deleteTournaments call');
 			async.waterfall([
 				tools.getTournaments,
 				tools.deleteTournaments
@@ -74,21 +73,19 @@ router.post('/submit', function(req, res, next) {
 			});
 			break;
 		case 'addParticipant':
-			console.log('addParticipant call');
-
+			//console.log('addParticipant call');
 			async.series([
 				function(callback) {
 					tools.addParticipant(req.body.tournamentName, req.body.participant, callback);
 				}
 			], function(err, result) {
-				console.log('result = ' + result);
+				//console.log('result = ' + result);
 				res.redirect('/tournament?id=' + req.body.tournamentName);
 			});
 
 			break;
 		case 'startTournament':
-			console.log('startTournament call');
-			
+			//console.log('startTournament call');
 			async.series([
 				function(callback) {
 					tools.startTournament(req.body.tournamentName, callback);
@@ -100,8 +97,7 @@ router.post('/submit', function(req, res, next) {
 
 			break;
 		case 'reportScore':
-			console.log('reportScore call');
-
+			//console.log('reportScore call');
 			async.series([
 				function(callback) {
 					tools.reportScore(req.body.tournamentId, req.body.matchId, req.body.winnerId, req.body.scoresCsv, callback);			

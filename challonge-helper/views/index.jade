@@ -6,11 +6,9 @@ html
     header
       nav
         div
-          form(action='/submit',method='post')
-            input(type='hidden' name='action' value='createTournament')
+          form(action='/createTournament',method='post')
             input(type='submit', value='Create Tournament', data-transition='fade', data-theme='c')
-          form(action='/submit',method='post')
-            input(type='hidden' name='action' value='deleteTournaments')
+          form(action='/deleteTournaments',method='post')
             input(type='submit', value='Delete Tournaments', data-transition='fade', data-theme='c')
         div
           table
