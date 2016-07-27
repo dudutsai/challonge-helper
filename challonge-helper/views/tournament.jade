@@ -20,7 +20,7 @@ html
                   | #{val}
         div
         form(action='/addParticipant', method='post')
-          input(type='text', name='participant')
+          input(type='text', name='participant', autofocus)
           input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
           input(type='submit', value='Add', data-transition='fade', data-theme='c')
         h1
