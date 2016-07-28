@@ -2,7 +2,6 @@ var constants = require('./constants');
 var request = require('request');
 var async = require('async');
 var _ = require('lodash');
-var hashmap = require('hashmap');
 
 exports.getTournaments = function(callback) {
 	console.log('getTournaments() start!');
