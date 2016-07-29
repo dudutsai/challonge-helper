@@ -8,9 +8,10 @@ html
         div
           form(action='/', method='get')
             input(type='submit', value='Back To Index', data-transition='fade', data-theme='c')
-          form(action='/startTournament', method='post')
-            input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
-            input(type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
+          if tournamentData.tournament.state == 'pending'
+            form(action='/startTournament', method='post')
+              input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
+              input(type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
           a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
         //
           div

@@ -7,8 +7,8 @@ exports.getTournaments = function(callback) {
 	console.log('getTournaments() start!');
 
 	request({
-		uri: constants.url + '.json',
-		method: "GET"
+		uri: constants.url + '.json?api_key=' + constants.api_key,
+		method: "GET",
 	}, 	function(error, response, body) {
 		if (error) {
 			console.error('Get tournament error! ' + error);
@@ -21,7 +21,7 @@ exports.getTournament = function(id, callback) {
 	//console.log('getTournament() start! | id = ' + id + ' | callback = ' + callback);
 
 	request({
-		uri: constants.url + '/' + id + '.json',
+		uri: constants.url + '/' + id + '.json?api_key=' + constants.api_key,
 		method: "GET"
 	}, 	function(error, response, body) {
 		if (error) {
@@ -37,7 +37,7 @@ exports.getOpenMatches = function(id, callback) {
 	//console.log('getMatches() start! | id = ' + id + ' | callback = ' + callback);
 	//console.log(constants.url + '/' + id + '/matches.json');
 	request({
-		uri: constants.url + '/' + id + '/matches.json',
+		uri: constants.url + '/' + id + '/matches.json?api_key=' + constants.api_key,
 		method: "GET"
 	}, function(error, response, body) {
 		if (error) {
@@ -69,7 +69,7 @@ exports.getOpenMatches = function(id, callback) {
 exports.getPlayerMapping = function(id, callback) {
 	//console.log('uri = ' + constants.url + '/' + id + '/participants.json');
 	request({
-		uri: constants.url + '/' + id + '/participants.json',
+		uri: constants.url + '/' + id + '/participants.json?api_key=' + constants.api_key,
 		method: "GET"
 	}, function(error, response, body) {
 		if (error) {
@@ -96,7 +96,7 @@ exports.deleteTournaments = function(tournamentData, callback) {
   	async.forEachOf(_.values(data), function(item, key, callback) {
   		tournament_id = item['tournament']['id'];
 		var options = {
-			uri: constants.url + '/' + tournament_id + '.json',
+			uri: constants.url + '/' + tournament_id + '.json?api_key=' + constants.api_key,
 			method: 'DELETE'
 		}
 		request(options, function (error, response, body) {
@@ -132,7 +132,8 @@ exports.createTournament = function(callback) {
 			'tournament_type':'double elimination',
 			'url':tournamentName,
 			'description':'test description',
-			'open_signup':'false'
+			'open_signup':'false',
+			'api_key':constants.api_key
 		}
 	};
 	request(options, function (error, response, body) {
@@ -153,7 +154,8 @@ exports.addParticipant = function(tournamentName, participant, callback) {
 		uri: constants.url + '/' + tournamentName + '/participants.json',
 		method: 'POST',
 		json: {
-			'name': participant
+			'name': participant,
+			'api_key':constants.api_key
 		}
 	};
 	request(options, function (error, response, body) {
@@ -175,7 +177,7 @@ exports.startTournament = function(tournamentName, callback) {
 	console.log('startTournament start');
 
 	var options = {
-		uri: constants.url + '/' + tournamentName + '/start.json',
+		uri: constants.url + '/' + tournamentName + '/start.json?api_key=' + constants.api_key,
 		method: 'POST',
 	};
 	request(options, function (error, response, body) {
@@ -198,12 +200,12 @@ exports.reportScore = function(tournamentId, matchId, winnerId, scoresCsv, callb
 	// console.log('p1v = ' + p1votes);
 	// console.log('p2v = ' + p2votes);
 
-	var url = "https://api.challonge.com/v1/tournaments/" + tournamentId + "/matches/" + matchId 
+	var url = constants.url + "/" + tournamentId + "/matches/" + matchId 
 		+ ".json?api_key=" + constants.api_key
 		+ "&match[winner_id]=" + winnerId 
-		+"&match[scores_csv]=" + scoresCsv;
+		+ "&match[scores_csv]=" + scoresCsv;
 
-	console.log('url = ' + url);
+	//console.log('url = ' + url);
 
 	var options = {
 		uri: url,

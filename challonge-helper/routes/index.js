@@ -103,7 +103,7 @@ router.post('/:action', function(req, res, next) {
 					tools.reportScore(req.body.tournamentId, req.body.matchId, req.body.winnerId, req.body.scoresCsv, callback);			
 				}
 			], function(err, result) {
-				console.log('result = ' + result);
+				//console.log('result = ' + result);
 				res.redirect('/tournament?id=' + req.body.tournamentId);
 			});
 
