@@ -56,11 +56,14 @@ router.post('/:action', function(req, res, next) {
 		case 'createTournament':
 			//console.log('createTournament call');
 			async.series([
-				tools.createTournament,
+				function(callback) {
+					tools.createTournament(req.body.tournamentName, callback);
+				}
 			], function(err, result) {
-				console.log('result = ' + result);
+				//console.log('result = ' + result);
 				res.redirect('/');
 			});
+
 			break;
 		case 'deleteTournaments':
 			//console.log('deleteTournaments call');

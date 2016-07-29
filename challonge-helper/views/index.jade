@@ -7,6 +7,7 @@ html
       nav
         div
           form(action='/createTournament',method='post')
+            input(type='text', name='tournamentName', autofocus)
             input(type='submit', value='Create Tournament', data-transition='fade', data-theme='c')
           form(action='/deleteTournaments',method='post')
             input(type='submit', value='Delete Tournaments', data-transition='fade', data-theme='c')
@@ -16,4 +17,4 @@ html
               each val, key in tournamentData
                 tr
                   td
-                    a(href="tournament?id=#{val.tournament.id}") #{val.tournament.name} - #{val.tournament.id}
+                    a(href="tournament?id=#{val.tournament.id}") #{val.tournament.name}

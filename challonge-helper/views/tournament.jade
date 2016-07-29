@@ -12,18 +12,11 @@ html
             form(action='/startTournament', method='post')
               input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
               input(type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
+            form(action='/addParticipant', method='post')
+              input(type='text', name='participant', autofocus)
+              input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
+              input(type='submit', value='Add', data-transition='fade', data-theme='c')
           a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
-        //
-          div
-            select(name='players' multiple)
-              each val in playerMap
-                option  
-                  | #{val}
-        div
-        form(action='/addParticipant', method='post')
-          input(type='text', name='participant', autofocus)
-          input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
-          input(type='submit', value='Add', data-transition='fade', data-theme='c')
         h1
           | Players:
         table

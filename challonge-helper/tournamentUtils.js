@@ -118,11 +118,13 @@ exports.deleteTournaments = function(tournamentData, callback) {
 
 };
 
-exports.createTournament = function(callback) {
+exports.createTournament = function(tournamentName, callback) {
 	console.log('createTournament() start!');
 
 	var date = new Date();
-	var tournamentName = 'TestTourney' + (date.getMonth()+1) + date.getDate() + date.getMinutes() + date.getSeconds();
+	if (tournamentName == '') {
+		var tournamentName = 'TestTourney' + (date.getMonth()+1) + date.getDate() + date.getMinutes() + date.getSeconds();		
+	}
 
 	var options = {
 		uri: constants.url + '.json',
