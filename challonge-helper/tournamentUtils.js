@@ -120,12 +120,12 @@ exports.deleteTournaments = function(tournamentData, callback) {
 
 exports.createTournament = function(tournamentName, callback) {
 	console.log('createTournament() start!');
-
-	var date = new Date();
 	if (tournamentName == '') {
+		var date = new Date();
 		var tournamentName = 'TestTourney' + (date.getMonth()+1) + date.getDate() + date.getMinutes() + date.getSeconds();		
 	}
 
+	console.log('tournamentName = ' + tournamentName);
 	var options = {
 		uri: constants.url + '.json',
 		method: 'POST',
@@ -144,7 +144,8 @@ exports.createTournament = function(tournamentName, callback) {
 	    callback(null, 'createTournament done');
 	  }
 	  else {
-	  	callback(error);
+	  	console.error('error = ' + response.body.errors[0]);
+	  	callback(response.body.errors[0]);
 	  }
 	});
 };

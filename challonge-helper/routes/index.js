@@ -4,7 +4,7 @@ var tools = require('./../tournamentUtils.js');
 var async = require('async');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/:error?', function(req, res, next) {
 	tournamentData = tools.getTournaments(function(err, body) {
 		//TODO parse body for tournament names here
 		res.render('index', { title: "Andrew's page", tournamentData: JSON.parse(body) });
@@ -60,8 +60,14 @@ router.post('/:action', function(req, res, next) {
 					tools.createTournament(req.body.tournamentName, callback);
 				}
 			], function(err, result) {
-				//console.log('result = ' + result);
-				res.redirect('/');
+				if (err) {
+					console.log('Error: ' + err);
+					res.send(err);
+
+				}
+				else {
+					res.redirect('/');					
+				}
 			});
 
 			break;
