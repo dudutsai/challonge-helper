@@ -4,7 +4,7 @@ var tools = require('./../tournamentUtils.js');
 var async = require('async');
 
 /* GET home page. */
-router.get('/:error?', function(req, res, next) {
+router.get('/', function(req, res, next) {
 	tournamentData = tools.getTournaments(function(err, body) {
 		//TODO parse body for tournament names here
 		res.render('index', { title: "Andrew's page", tournamentData: JSON.parse(body) });

@@ -9,11 +9,11 @@ html
           div
             | Error: Duplicate tournament URL
         div
-          form(action='/createTournament',method='post')
+          form(action='/createTournament', method='post')
             input(type='text', name='tournamentName', autofocus)
-            input(type='submit', value='Create Tournament', data-transition='fade', data-theme='c')
-          form(action='/deleteTournaments',method='post')
-            input(type='submit', value='Delete Tournaments', data-transition='fade', data-theme='c')
+            button(class='btn', type='submit') Create Tournament
+          form(action='/deleteTournaments', method='post')
+            button(class='btn', type='submit') Delete Tournaments
         div
           table
             tbody
