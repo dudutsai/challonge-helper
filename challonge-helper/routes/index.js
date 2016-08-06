@@ -30,7 +30,8 @@ router.get('/tournament', function(req, res) {
     		title: JSON.parse(result[1]).tournament.name,
     		matchData: result[0],
     		tournamentData: JSON.parse(result[1]),
-    		playerMap: result[2]
+    		playerMap: result[2],
+    		activeSets: activeSets
     	});
   	});
 });
@@ -105,6 +106,16 @@ router.post('/:action', function(req, res, next) {
 			});
 
 			break;
+		case 'startSet':
+			console.log('startSet call');
+			if (activeSets.indexOf(req.body.matchId) == -1) {
+				activeSets.push(parseInt(req.body.matchId));
+			}
+			console.log('indexOf = ' + activeSets.indexOf(req.body.matchId));
+			res.redirect('/tournament?id=' + req.body.tournamentId);
+
+			break;
+
 		case 'reportScore':
 			//console.log('reportScore call');
 			async.series([
@@ -112,8 +123,14 @@ router.post('/:action', function(req, res, next) {
 					tools.reportScore(req.body.tournamentId, req.body.matchId, req.body.winnerId, req.body.scoresCsv, callback);			
 				}
 			], function(err, result) {
-				//console.log('result = ' + result);
-				res.redirect('/tournament?id=' + req.body.tournamentId);
+				if (!err) {
+					//console.log('result = ' + result);
+					var index = activeSets.indexOf(req.body.matchId);
+					if (index > -1) {
+						activeSets.splice(index, 1);
+					}
+					res.redirect('/tournament?id=' + req.body.tournamentId);					
+				}
 			});
 
 			break;

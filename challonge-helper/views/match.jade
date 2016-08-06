@@ -2,37 +2,44 @@ html
   head
     title= p1 + ' vs ' + p2
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+  body(style='background: lightblue url(images/dreamland.jpg)')
     header
-      nav
-        | #{p1}  vs #{p2}
-        div
-          a(href="tournament?id=#{tournamentId}") 
-            button Cancel 
-          form(action='/reportScore',method='post')
-            input(type='hidden' name='tournamentId' value=tournamentId)
-            input(type='hidden' name='matchId' value=matchId)
-            input(type='hidden' name='winnerId' value=p1Id)
-            input(type='hidden' name='scoresCsv' value='2-0')
-            input(type='submit', value='2-0', data-transition='fade', data-theme='c')
-          form(action='/reportScore',method='post')
-            input(type='hidden' name='action' value='reportScore')
-            input(type='hidden' name='tournamentId' value=tournamentId)
-            input(type='hidden' name='matchId' value=matchId)
-            input(type='hidden' name='winnerId' value=p1Id)
-            input(type='hidden' name='scoresCsv' value='2-1')
-            input(type='submit', value='2-1', data-transition='fade', data-theme='c')
-          form(action='/reportScore',method='post')
-            input(type='hidden' name='action' value='reportScore')
-            input(type='hidden' name='tournamentId' value=tournamentId)
-            input(type='hidden' name='matchId' value=matchId)
-            input(type='hidden' name='winnerId' value=p2Id)
-            input(type='hidden' name='scoresCsv' value='1-2')
-            input(type='submit', value='1-2', data-transition='fade', data-theme='c')
-          form(action='/reportScore',method='post')
-            input(type='hidden' name='action' value='reportScore')
-            input(type='hidden' name='tournamentId' value=tournamentId)
-            input(type='hidden' name='matchId' value=matchId)
-            input(type='hidden' name='winnerId' value=p2Id)
-            input(type='hidden' name='scoresCsv' value='0-2')
-            input(type='submit', value='0-2', data-transition='fade', data-theme='c')
+      div(class='row', style='background-color:#ff99cc')
+        h1
+          font(color='#ff0000')
+            | #{p1} 
+          | vs 
+          font(color='#0000ff')
+            | #{p2}
+    nav
+    br
+    div(class='well')
+      a(href="tournament?id=#{tournamentId}") 
+        button(class='btn', style='margin:10px') Cancel 
+      form(action='/reportScore',method='post')
+        input(type='hidden' name='tournamentId' value=tournamentId)
+        input(type='hidden' name='matchId' value=matchId)
+        input(type='hidden' name='winnerId' value=p1Id)
+        input(type='hidden' name='scoresCsv' value='2-0')
+        input(class='btn-lg', style='color:#ff0000', type='submit', value='2-0', data-transition='fade', data-theme='c')
+      form(action='/reportScore',method='post')
+        input(type='hidden' name='action' value='reportScore')
+        input(type='hidden' name='tournamentId' value=tournamentId)
+        input(type='hidden' name='matchId' value=matchId)
+        input(type='hidden' name='winnerId' value=p1Id)
+        input(type='hidden' name='scoresCsv' value='2-1')
+        input(class='btn-lg', style='color:#ff3399', type='submit', value='2-1', data-transition='fade', data-theme='c')
+      form(action='/reportScore',method='post')
+        input(type='hidden' name='action' value='reportScore')
+        input(type='hidden' name='tournamentId' value=tournamentId)
+        input(type='hidden' name='matchId' value=matchId)
+        input(type='hidden' name='winnerId' value=p2Id)
+        input(type='hidden' name='scoresCsv' value='1-2')
+        input(class='btn-lg', style='color:#9966ff', type='submit', value='1-2', data-transition='fade', data-theme='c')
+      form(action='/reportScore',method='post')
+        input(type='hidden' name='action' value='reportScore')
+        input(type='hidden' name='tournamentId' value=tournamentId)
+        input(type='hidden' name='matchId' value=matchId)
+        input(type='hidden' name='winnerId' value=p2Id)
+        input(type='hidden' name='scoresCsv' value='0-2')
+        input(class='btn-lg', style='color:#0000ff', type='submit', value='0-2', data-transition='fade', data-theme='c')

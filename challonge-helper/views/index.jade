@@ -2,22 +2,28 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+  body(style='background: lightblue url(images/dreamland.jpg)')
     header
-      nav
-        //
-          div
-            | Error: Duplicate tournament URL
-        div
-          form(action='/createTournament', method='post')
-            input(type='text', name='tournamentName', autofocus)
-            button(class='btn', type='submit') Create Tournament
-          form(action='/deleteTournaments', method='post')
-            button(class='btn', type='submit') Delete Tournaments
-        div
-          table
-            tbody
-              each val, key in tournamentData
-                tr
-                  td
-                    a(href="tournament?id=#{val.tournament.id}") #{val.tournament.name}
+      div(class='row', style='background-color:#ff99cc')
+        h1
+          | Tournament Index
+    nav
+    br
+    div(class='well')
+      form(class='form-inline', role='form', action='/createTournament', method='post')
+        div(class='form-group')
+          input(class='form-control', type='text', name='tournamentName', autofocus) 
+        button(class='btn', type='submit') Create Tournament
+    
+      div
+        form(action='/deleteTournaments', method='post')
+          button(class='btn', type='submit') Delete All Tournaments
+      div(class='center-block')
+        h3
+          | Tournaments:
+        table(style='margin:0px auto')
+          tbody
+            each val, key in tournamentData
+              tr
+                td(class='text-center')
+                  a(href="tournament?id=#{val.tournament.id}") #{val.tournament.name}

@@ -2,30 +2,60 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+  body(style='background: lightblue url(images/dreamland.jpg)')
     header
-      nav
-        div
-          form(action='/', method='get')
-            input(type='submit', value='Back To Index', data-transition='fade', data-theme='c')
-          if tournamentData.tournament.state == 'pending'
-            form(action='/startTournament', method='post')
-              input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
-              input(type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
-            form(action='/addParticipant', method='post')
-              input(type='text', name='participant', autofocus)
-              input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
-              input(type='submit', value='Add', data-transition='fade', data-theme='c')
-          a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
+      div(class='row', style='background-color:#ff99cc')
         h1
+          | #{title}
+    nav
+    br
+    div(class='well')
+      div
+        form(class='form-inline', action='/', method='get')
+          input(class='btn', type='submit', value='Back To Index', data-transition='fade', data-theme='c')
+      div(class='center-block')      
+        if tournamentData.tournament.state == 'pending'
+          form(class='form-inline', action='/startTournament', method='post')
+            input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
+            input(class='btn', type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
+          form(class='form-inline', action='/addParticipant', method='post')
+            input(class='form-control', type='text', name='participant', autofocus)
+            input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
+            input(class='btn', type='submit', value='Add', data-transition='fade', data-theme='c')
+        h3
+          a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
+        h3  
+          if tournamentData.tournament.state == 'underway'
+            | Currently playing
+            table(style='margin:0px auto')
+              tbody
+                each val, key in matchData
+                  - if (activeSets.indexOf(val.id) > -1)
+                    tr
+                      td
+                        a(href="match?p1=#{playerMap[val.player1_id]}&p1Id=#{val.player1_id}&p2=#{playerMap[val.player2_id]}&p2Id=#{val.player2_id}&tournamentId=#{tournamentData.tournament.id}&matchId=#{val.id}") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
+            br
+            | To Be Played:
+            table(style='margin:0px auto')
+              tbody
+                each val, key in matchData
+                  - if (activeSets.indexOf(val.id) < 0)
+                    tr
+                      td
+                        form(class='form-inline', id='playSetForm', role='form', action='/startSet', method='post')
+                          div(class='form-group')
+                            input(type='hidden', name='tournamentId', value=tournamentData.tournament.id)
+                            input(type='hidden', name='matchId', value=val.id)
+                            a(href="#" onclick="document.getElementById('playSetForm').submit()") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
+                      //
+                        a(href="/?action='/startSet'&matchId=#{val.id}&tournamentId=#{tournamentData.tournament.id}") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
+          br
           | Players:
-        table
-          tbody
-            each val in playerMap
-              tr
-                td
-                  | #{val}
-            each val, key in matchData
-              tr
-                td
-                  a(href="match?p1=#{playerMap[val.player1_id]}&p1Id=#{val.player1_id}&p2=#{playerMap[val.player2_id]}&p2Id=#{val.player2_id}&tournamentId=#{tournamentData.tournament.id}&matchId=#{val.id}") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
+          table(style='margin:0px auto')
+            tbody
+              - var i = 0
+              each val, index in playerMap
+                - i++
+                tr
+                  td
+                    | #{i}: #{val}
