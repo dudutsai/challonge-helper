@@ -107,11 +107,10 @@ router.post('/:action', function(req, res, next) {
 
 			break;
 		case 'startSet':
-			console.log('startSet call');
+			//console.log('startSet call');
 			if (activeSets.indexOf(req.body.matchId) == -1) {
 				activeSets.push(parseInt(req.body.matchId));
 			}
-			console.log('indexOf = ' + activeSets.indexOf(req.body.matchId));
 			res.redirect('/tournament?id=' + req.body.tournamentId);
 
 			break;

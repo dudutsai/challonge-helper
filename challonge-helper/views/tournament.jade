@@ -33,6 +33,10 @@ html
                   - if (activeSets.indexOf(val.id) > -1)
                     tr
                       td
+                        if (val.round > 0)
+                          | WR #{val.round}: 
+                        else
+                          | LR #{val.round*-1}: 
                         a(href="match?p1=#{playerMap[val.player1_id]}&p1Id=#{val.player1_id}&p2=#{playerMap[val.player2_id]}&p2Id=#{val.player2_id}&tournamentId=#{tournamentData.tournament.id}&matchId=#{val.id}") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
             br
             | To Be Played:
@@ -42,11 +46,14 @@ html
                   - if (activeSets.indexOf(val.id) < 0)
                     tr
                       td
-                        form(class='form-inline', id='playSetForm', role='form', action='/startSet', method='post')
-                          div(class='form-group')
-                            input(type='hidden', name='tournamentId', value=tournamentData.tournament.id)
-                            input(type='hidden', name='matchId', value=val.id)
-                            a(href="#" onclick="document.getElementById('playSetForm').submit()") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
+                        if (val.round > 0)
+                          | WR #{val.round}: 
+                        else
+                          | LR #{val.round*-1}: 
+                        form(id='playSetForm#{val.id}', role='form', action='/startSet', method='post')
+                          input(type='hidden', name='tournamentId', value=tournamentData.tournament.id)
+                          input(type='hidden', name='matchId', value=val.id)
+                          a(href="#" onclick="document.getElementById('playSetForm#{val.id}').submit()") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
                       //
                         a(href="/?action='/startSet'&matchId=#{val.id}&tournamentId=#{tournamentData.tournament.id}") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
           br
