@@ -39,6 +39,9 @@ app.use(function(req, res, next) {
 if (typeof activeSets == 'undefined') {
   activeSets = [];
 }
+if (typeof credentials == 'undefined') {
+  credentials = [];
+}
 // error handlers
 
 // development error handler
@@ -54,8 +57,8 @@ if (app.get('env') === 'development') {
 }
 
 app.get('/', function(req, res){
-  res.render('index', {
-    title: 'Home'
+  res.render('login', {
+    title: 'asdfasdfasd'
   });
 });
 

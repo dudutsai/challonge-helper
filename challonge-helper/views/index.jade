@@ -10,13 +10,16 @@ html
     nav
     br
     div(class='well')
+      if (apikey)
       form(class='form-inline', role='form', action='/createTournament', method='post')
         div(class='form-group')
+          input(type='hidden', name='usr', value=usr)
           input(class='form-control', type='text', name='tournamentName', autofocus) 
         button(class='btn', type='submit') Create Tournament
     
       div
         form(action='/deleteTournaments', method='post')
+          input(type='hidden', name='usr', value=usr)
           button(class='btn', type='submit') Delete All Tournaments
       div(class='center-block')
         h3
@@ -26,4 +29,4 @@ html
             each val, key in tournamentData
               tr
                 td(class='text-center')
-                  a(href="tournament?id=#{val.tournament.id}") #{val.tournament.name}
+                  a(href="tournament?usr=#{usr}&id=#{val.tournament.id}") #{val.tournament.name}

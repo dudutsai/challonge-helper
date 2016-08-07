@@ -1,0 +1,19 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body(style='background: lightblue url(images/dreamland.jpg)')
+    header
+      div(class='row', style='background-color:#ff99cc')
+        h1
+          | Login
+    nav
+    br
+    div(class='well')
+      h3
+        | Username...............  Enter API Key
+      form(class='form-inline', role='form', action='/testCredentials', method='post')
+        div(class='form-group')
+          input(class='form-control', type='text', name='usr' autofocus)
+          input(class='form-control', type='text', name='api_key')
+        button(class='btn', type='submit') Test Credentials!

@@ -3,25 +3,30 @@ var request = require('request');
 var async = require('async');
 var _ = require('lodash');
 
-exports.getTournaments = function(callback) {
-	console.log('getTournaments() start!');
-
+exports.getTournaments = function(api_key, callback) {
+	// console.log('getTournaments() start!');
+	// console.log('api_key = ' + api_key);
+	// console.log('callback = ' + callback);
 	request({
-		uri: constants.url + '.json?api_key=' + constants.api_key,
+		uri: constants.url + '.json?api_key=' + api_key,
 		method: "GET",
 	}, 	function(error, response, body) {
-		if (error) {
-			console.error('Get tournament error! ' + error);
+		//console.log('response = ' + JSON.stringify(response));
+		if (response.statusCode == 401) {
+			//console.error('Invalid API key');
+			callback(401, null);
 		}
-		callback(null, body);
+		else {
+			callback(null, body, api_key);
+		}
 	});
 };
 
-exports.getTournament = function(id, callback) {
+exports.getTournament = function(id, api_key, callback) {
 	//console.log('getTournament() start! | id = ' + id + ' | callback = ' + callback);
 
 	request({
-		uri: constants.url + '/' + id + '.json?api_key=' + constants.api_key,
+		uri: constants.url + '/' + id + '.json?api_key=' + api_key,
 		method: "GET"
 	}, 	function(error, response, body) {
 		if (error) {
@@ -33,11 +38,11 @@ exports.getTournament = function(id, callback) {
 	});
 };
 
-exports.getOpenMatches = function(id, callback) {
+exports.getOpenMatches = function(id, api_key, callback) {
 	//console.log('getMatches() start! | id = ' + id + ' | callback = ' + callback);
 	//console.log(constants.url + '/' + id + '/matches.json');
 	request({
-		uri: constants.url + '/' + id + '/matches.json?api_key=' + constants.api_key,
+		uri: constants.url + '/' + id + '/matches.json?api_key=' + api_key,
 		method: "GET"
 	}, function(error, response, body) {
 		if (error) {
@@ -66,16 +71,17 @@ exports.getOpenMatches = function(id, callback) {
 	});
 };
 
-exports.getPlayerMapping = function(id, callback) {
+exports.getPlayerMapping = function(id, api_key, callback) {
 	//console.log('uri = ' + constants.url + '/' + id + '/participants.json');
 	request({
-		uri: constants.url + '/' + id + '/participants.json?api_key=' + constants.api_key,
+		uri: constants.url + '/' + id + '/participants.json?api_key=' + api_key,
 		method: "GET"
 	}, function(error, response, body) {
 		if (error) {
 			console.error('Get participants error!' + error);
 		}
 		mapping = {};
+		// console.log('body = ' + JSON.stringify(body));
 		playerData = JSON.parse(body);
 
 		for (player in playerData) {
@@ -84,19 +90,24 @@ exports.getPlayerMapping = function(id, callback) {
 			//console.log('mapping[' + playerData[player].participant.id + '] = ' + mapping[playerData[player].participant.id]);
 		}
 		console.log('getPlayerMapping() done!');
-		callback(null, mapping);		
+		if (JSON.stringify(mapping) == '{}') {
+			mapping = null;
+		}
+		callback(null, mapping);
 	});
 };
 
-exports.deleteTournaments = function(tournamentData, callback) {
+exports.deleteTournaments = function(tournamentData, api_key, callback) {
 	console.log('deleteTournaments() start!');
-
+	// console.log('tournamentData = ' + tournamentData);
+	// console.log('api_key = ' + api_key);
+	// console.log('callback = ' + callback);
   	data = JSON.parse(tournamentData);
 
   	async.forEachOf(_.values(data), function(item, key, callback) {
   		tournament_id = item['tournament']['id'];
 		var options = {
-			uri: constants.url + '/' + tournament_id + '.json?api_key=' + constants.api_key,
+			uri: constants.url + '/' + tournament_id + '.json?api_key=' + api_key,
 			method: 'DELETE'
 		}
 		request(options, function (error, response, body) {
@@ -118,14 +129,14 @@ exports.deleteTournaments = function(tournamentData, callback) {
 
 };
 
-exports.createTournament = function(tournamentName, callback) {
+exports.createTournament = function(tournamentName, api_key, callback) {
 	console.log('createTournament() start!');
 	if (tournamentName == '') {
 		var date = new Date();
 		var tournamentName = 'TestTourney' + (date.getMonth()+1) + date.getDate() + date.getMinutes() + date.getSeconds();		
 	}
 
-	console.log('tournamentName = ' + tournamentName);
+	// console.log('tournamentName = ' + tournamentName);
 	var options = {
 		uri: constants.url + '.json',
 		method: 'POST',
@@ -135,7 +146,7 @@ exports.createTournament = function(tournamentName, callback) {
 			'url':tournamentName,
 			'description':'test description',
 			'open_signup':'false',
-			'api_key':constants.api_key
+			'api_key':api_key
 		}
 	};
 	request(options, function (error, response, body) {
@@ -150,7 +161,7 @@ exports.createTournament = function(tournamentName, callback) {
 	});
 };
 
-exports.addParticipant = function(tournamentName, participant, callback) {
+exports.addParticipant = function(tournamentName, participant, api_key, callback) {
 	//console.log('addParticipants() start!');
 
 	var options = {
@@ -158,7 +169,7 @@ exports.addParticipant = function(tournamentName, participant, callback) {
 		method: 'POST',
 		json: {
 			'name': participant,
-			'api_key':constants.api_key
+			'api_key':api_key
 		}
 	};
 	request(options, function (error, response, body) {
@@ -176,11 +187,11 @@ exports.addParticipant = function(tournamentName, participant, callback) {
 
 };
 
-exports.startTournament = function(tournamentName, callback) {
+exports.startTournament = function(tournamentName, api_key, callback) {
 	console.log('startTournament start');
 
 	var options = {
-		uri: constants.url + '/' + tournamentName + '/start.json?api_key=' + constants.api_key,
+		uri: constants.url + '/' + tournamentName + '/start.json?api_key=' + api_key,
 		method: 'POST',
 	};
 	request(options, function (error, response, body) {
@@ -194,7 +205,7 @@ exports.startTournament = function(tournamentName, callback) {
 	});
 };
 
-exports.reportScore = function(tournamentId, matchId, winnerId, scoresCsv, callback) {
+exports.reportScore = function(tournamentId, matchId, winnerId, scoresCsv, api_key, callback) {
 	console.log('reportScores start');
 
 	// console.log('tournamentId = ' + tournamentId);
@@ -204,7 +215,7 @@ exports.reportScore = function(tournamentId, matchId, winnerId, scoresCsv, callb
 	// console.log('p2v = ' + p2votes);
 
 	var url = constants.url + "/" + tournamentId + "/matches/" + matchId 
-		+ ".json?api_key=" + constants.api_key
+		+ ".json?api_key=" + api_key
 		+ "&match[winner_id]=" + winnerId 
 		+ "&match[scores_csv]=" + scoresCsv;
 
