@@ -2,7 +2,7 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body(style='background: lightblue url(images/dreamland.jpg)')
+  body(style='background: lightblue url(images/dreamland.jpg); background-size: 100% 100%; background-repeat: no-repeat;')
     header
       div(class='row', style='background-color:#ff99cc')
         h1
@@ -29,4 +29,9 @@ html
             each val, key in tournamentData
               tr
                 td(class='text-center')
+                  form(class='form-inline', role='form', action='/tournament', method='get')
+                    input(type='hidden', name='usr', value=usr)
+                    input(type='hidden', name='id', value=val.tournament.id)
+                    button(class='btn', type='submit') #{val.tournament.name}
+                //
                   a(href="tournament?usr=#{usr}&id=#{val.tournament.id}") #{val.tournament.name}

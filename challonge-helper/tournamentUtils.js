@@ -33,7 +33,7 @@ exports.getTournament = function(id, api_key, callback) {
 			console.error('Get tournament error! ' + error);
 		}
 		//console.log('getTournament body = ' + body);
-		console.log('getTournament() done!');
+		//console.log('getTournament() done!');
 		callback(null, body);
 	});
 };
@@ -65,7 +65,7 @@ exports.getOpenMatches = function(id, api_key, callback) {
 			return a.round - b.round;
 		});
 		//console.log('matches = ' + JSON.stringify(matches));
-		console.log('getOpenMatches() done!');
+		//console.log('getOpenMatches() done!');
 		callback(null, matches);
 		
 	});
@@ -89,7 +89,7 @@ exports.getPlayerMapping = function(id, api_key, callback) {
 
 			//console.log('mapping[' + playerData[player].participant.id + '] = ' + mapping[playerData[player].participant.id]);
 		}
-		console.log('getPlayerMapping() done!');
+		//console.log('getPlayerMapping() done!');
 		if (JSON.stringify(mapping) == '{}') {
 			mapping = null;
 		}
@@ -98,7 +98,7 @@ exports.getPlayerMapping = function(id, api_key, callback) {
 };
 
 exports.deleteTournaments = function(tournamentData, api_key, callback) {
-	console.log('deleteTournaments() start!');
+	//console.log('deleteTournaments() start!');
 	// console.log('tournamentData = ' + tournamentData);
 	// console.log('api_key = ' + api_key);
 	// console.log('callback = ' + callback);
@@ -130,7 +130,7 @@ exports.deleteTournaments = function(tournamentData, api_key, callback) {
 };
 
 exports.createTournament = function(tournamentName, api_key, callback) {
-	console.log('createTournament() start!');
+	//console.log('createTournament() start!');
 	if (tournamentName == '') {
 		var date = new Date();
 		var tournamentName = 'TestTourney' + (date.getMonth()+1) + date.getDate() + date.getMinutes() + date.getSeconds();		
@@ -151,7 +151,7 @@ exports.createTournament = function(tournamentName, api_key, callback) {
 	};
 	request(options, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
-	    console.log('Tournament sucessfully created'); // Print the shortened url.
+	    //console.log('Tournament sucessfully created'); // Print the shortened url.
 	    callback(null, 'createTournament done');
 	  }
 	  else {
@@ -174,11 +174,11 @@ exports.addParticipant = function(tournamentName, participant, api_key, callback
 	};
 	request(options, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
-	    	console.log('Participant "' + participant + '" successfully added'); // Print the shortened url.
+	    	//console.log('Participant "' + participant + '" successfully added'); // Print the shortened url.
 	    	callback(null, 'addParticipant done');
 	  	}
 	  	else {
-	  		console.log('error = ' + JSON.stringify(response.body.errors));
+	  		//console.log('error = ' + JSON.stringify(response.body.errors));
 	  		callback();
 	  	}
 	});
@@ -188,7 +188,7 @@ exports.addParticipant = function(tournamentName, participant, api_key, callback
 };
 
 exports.startTournament = function(tournamentName, api_key, callback) {
-	console.log('startTournament start');
+	//console.log('startTournament start');
 
 	var options = {
 		uri: constants.url + '/' + tournamentName + '/start.json?api_key=' + api_key,
@@ -196,7 +196,7 @@ exports.startTournament = function(tournamentName, api_key, callback) {
 	};
 	request(options, function (error, response, body) {
 	  	if (!error && response.statusCode == 200) {
-	    	console.log('Tournament sucessfully started'); // Print the shortened url.
+	    	//console.log('Tournament sucessfully started'); // Print the shortened url.
 	    	callback(null, 'startTournament done');
 	  	}
 	  	else {
@@ -206,7 +206,7 @@ exports.startTournament = function(tournamentName, api_key, callback) {
 };
 
 exports.reportScore = function(tournamentId, matchId, winnerId, scoresCsv, api_key, callback) {
-	console.log('reportScores start');
+	//console.log('reportScores start');
 
 	// console.log('tournamentId = ' + tournamentId);
 	// console.log('matchId = ' + matchId);
@@ -228,7 +228,7 @@ exports.reportScore = function(tournamentId, matchId, winnerId, scoresCsv, api_k
 	};
 	request(options, function (error, response, body) {
 	  	if (!error && response.statusCode == 200) {
-	    	console.log('Match sucessfully reported'); // Print the shortened url.
+	    	//console.log('Match sucessfully reported'); // Print the shortened url.
 	    	callback(null, 'response = ' + JSON.stringify(response) + '  body = ' + JSON.stringify(body));
 	  	}
 	  	else {

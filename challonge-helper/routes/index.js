@@ -24,7 +24,7 @@ router.get('/index', function(req, res, next) {
 
 router.get('/tournament', function(req, res) {
 	//console.log('tournament call');
-  	//console.log('req.query.id = ' + req.query.id);
+  	//console.log('req.body = ' + JSON.stringify(req.body));
   	var api_key = credentials[req.query.usr];
   	async.parallel([
   		function(callback) {
@@ -51,135 +51,127 @@ router.get('/tournament', function(req, res) {
 });
 
 router.get('/match', function(req, res) {
-	console.log('match call');
-//	console.log('req.query.matchId = ' + req.query.matchId);
-//	console.log('req.query.tournamentId = ' + req.query.tournamentId);
+	//console.log('match call');
+	//console.log('req.query = ' + JSON.stringify(req.query));
 
 	res.render('match', {
 		usr: req.query.usr,
+		tournamentId: req.query.tournamentId,
 		p1: req.query.p1,
 		p1Id: req.query.p1Id,
 		p2: req.query.p2,
 		p2Id: req.query.p2Id,
-		tournamentId: req.query.tournamentId,
-		matchId: req.query.matchId
+		matchId: req.query.matchId,
+		isBo5: req.query.isBo5
 	});
 });
 
-router.post('/:action', function(req, res, next) {
-	console.log('action = ' + JSON.stringify(req.params.action));
-	switch (req.params.action) {
-		case 'testCredentials':
-			//see if credentials exist
-			var api_key = req.body.api_key;
-			console.log('api key = ' + api_key);
-			console.log('credentials = ' + JSON.stringify(credentials));
-			if (credentials.indexOf(api_key) == -1) {
-				async.series([
-					function(callback) {
-						tools.getTournaments(api_key, callback);
-					}
-				], function(err, result) {
-					//console.log('result = ' + result);
-					if (err) {
-						//console.log('error = ' + err);
-						res.send('Check your API key and try again');
-					}
-					else {
-						credentials[req.body.usr] = api_key;
-						res.redirect('/index?usr=' + req.body.usr);
-					}
-				});
+router.post('/testCredentials', function(req, res, next) {
+	//see if credentials exist
+	var api_key = req.body.api_key;
+	//console.log('api key = ' + api_key);
+	//console.log('credentials = ' + JSON.stringify(credentials));
+	if (credentials.indexOf(api_key) == -1) {
+		async.series([
+			function(callback) {
+				tools.getTournaments(api_key, callback);
 			}
-
-			break;
-		case 'createTournament':
-			//console.log('createTournament call');
-			async.series([
-				function(callback) {
-					tools.createTournament(req.body.tournamentName, credentials[req.body.usr], callback);
-				}
-			], function(err, result) {
-				if (err) {
-					console.log('Error: ' + err);
-					res.send(err);
-
-				}
-				else {
-					res.redirect('/index?usr=' + req.body.usr);					
-				}
-			});
-
-			break;
-		case 'deleteTournaments':
-			//console.log('deleteTournaments call');
-			console.log('apikey= ' + credentials[req.body.usr]);
-			async.waterfall([
-				function(callback) {
-					tools.getTournaments(credentials[req.body.usr], callback);
-				},
-				tools.deleteTournaments
-			], function(err, result) {
-				console.log('result = ' + result);
-				res.redirect('/index?usr=' + req.body.usr);					
-			});
-			break;
-		case 'addParticipant':
-			//console.log('addParticipant call');
-			async.series([
-				function(callback) {
-					tools.addParticipant(req.body.tournamentName, req.body.participant, credentials[req.body.usr], callback);
-				}
-			], function(err, result) {
-				//console.log('result = ' + result);
-				res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
-			});
-
-			break;
-		case 'startTournament':
-			//console.log('startTournament call');
-			async.series([
-				function(callback) {
-					tools.startTournament(req.body.tournamentName, credentials[req.body.usr], callback);
-				}
-			], function(err, result) {
-				console.log('result = ' + result);
-				res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
-			});
-
-			break;
-		case 'startSet':
-			//console.log('startSet call');
-			if (activeSets.indexOf(req.body.matchId) == -1) {
-				activeSets.push(parseInt(req.body.matchId));
+		], function(err, result) {
+			//console.log('result = ' + result);
+			if (err) {
+				//console.log('error = ' + err);
+				res.send('Check your API key and try again');
 			}
-			res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
-
-			break;
-
-		case 'reportScore':
-			//console.log('reportScore call');
-			async.series([
-				function(callback) {
-					tools.reportScore(req.body.tournamentId, req.body.matchId, req.body.winnerId, req.body.scoresCsv, credentials[req.body.usr], callback);			
-				}
-			], function(err, result) {
-				if (!err) {
-					//console.log('result = ' + result);
-					var index = activeSets.indexOf(req.body.matchId);
-					if (index > -1) {
-						activeSets.splice(index, 1);
-					}
-					res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
-				}
-			});
-
-			break;
-		default:
-			break;
-
+			else {
+				credentials[req.body.usr] = api_key;
+				res.redirect('/index?usr=' + req.body.usr);
+			}
+		});
 	}
-	//res.redirect('/');
+});
+
+router.post('/createTournament', function(req, res, next) {
+	//console.log('createTournament call');
+	async.series([
+		function(callback) {
+			tools.createTournament(req.body.tournamentName, credentials[req.body.usr], callback);
+		}
+	], function(err, result) {
+		if (err) {
+			//console.log('Error: ' + err);
+			res.send(err);
+
+		}
+		else {
+			res.redirect('/index?usr=' + req.body.usr);					
+		}
+	});
+});
+
+router.post('/deleteTournaments', function(req, res, next) {
+	//console.log('deleteTournaments call');
+	//console.log('apikey= ' + credentials[req.body.usr]);
+	async.waterfall([
+		function(callback) {
+			tools.getTournaments(credentials[req.body.usr], callback);
+		},
+		tools.deleteTournaments
+	], function(err, result) {
+		//console.log('result = ' + result);
+		res.redirect('/index?usr=' + req.body.usr);
+	});
+});
+
+router.post('/addParticipant', function(req, res, next) {
+	//console.log('addParticipant call');
+	//console.log('tourneyname = ' + req.body.tournamentName + ' participant = ' + req.body.participant);
+	async.series([
+		function(callback) {
+			tools.addParticipant(req.body.tournamentName, req.body.participant, credentials[req.body.usr], callback);
+		}
+	], function(err, result) {
+		//console.log('result = ' + result);
+		res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
+	});
+});
+
+router.post('/startTournament', function(req, res, next) {
+	//console.log('startTournament call');
+	async.series([
+		function(callback) {
+			tools.startTournament(req.body.tournamentName, credentials[req.body.usr], callback);
+		}
+	], function(err, result) {
+		//console.log('result = ' + result);
+		res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
+	});
+});
+
+router.post('/startSet', function(req, res, next) {
+	//console.log('startSet call');
+	if (activeSets.indexOf(req.body.matchId) == -1) {
+		activeSets.push(parseInt(req.body.matchId));
+	}
+	res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
+});
+
+router.post('/reportScore', function(req, res, next) {
+	//console.log('reportScore call');
+	//console.log('body = ' + JSON.stringify(req.body));
+	async.series([
+		function(callback) {
+			tools.reportScore(req.body.tournamentId, req.body.matchId, req.body.winnerId, req.body.scoresCsv, credentials[req.body.usr], callback);
+		}
+	], function(err, result) {
+		if (!err) {
+			//console.log('result = ' + result);
+			var index = activeSets.indexOf(req.body.matchId);
+			if (index > -1) {
+				activeSets.splice(index, 1);
+			}
+			res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
+		}
+	});
 });
 
 module.exports = router;
