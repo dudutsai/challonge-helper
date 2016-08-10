@@ -17,7 +17,7 @@ html
       div(class='center-block')
         if tournamentData.tournament.state == 'pending'
           form(class='form-inline', action='/addParticipant', method='post')
-            input(class='form-control', type='text', name='participant', autofocus)
+            input(class='form-control', type='text', name='participant', placeholder='Participant Name', autofocus)
             input(type='hidden' name='tournamentName' value='#{tournamentData.tournament.url}')
             input(type='hidden', name='usr', value=usr)
             input(class='btn', type='submit', value='Add Participant', data-transition='fade', data-theme='c')
