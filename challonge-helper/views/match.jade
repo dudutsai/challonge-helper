@@ -13,7 +13,7 @@ html
             | #{p2}
     nav
     br
-    div(class='well')
+    div(class='well col-md-offset-3 col-md-6')
       a(href="tournament?usr=#{usr}&id=#{tournamentId}") 
         button(class='btn', style='margin:10px') Cancel 
       if isBo5 != 'on'
@@ -71,7 +71,7 @@ html
           input(type='hidden' name='usr' value=usr)        
           input(type='hidden' name='tournamentId' value=tournamentId)
           input(type='hidden' name='matchId' value=matchId)
-          input(type='hidden' name='winnerId' value=p2Id)
+          input(type='hidden' name='winnerId' value=p1Id)
           input(type='hidden' name='scoresCsv' value='3-2')
           input(class='btn-lg', style='color:#ff33cc', type='submit', value='3-2', data-transition='fade', data-theme='c')
         form(action='/reportScore',method='post')

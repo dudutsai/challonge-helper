@@ -3063,7 +3063,7 @@ select[multiple].input-group-lg > .input-group-btn > .btn {
   }
   .form-inline .input-group > .form-control,
   .navbar-form .input-group > .form-control {
-    width: 50%;
+    width: 100%;
   }
   .form-inline .control-label,
   .navbar-form .control-label {
