@@ -23,15 +23,16 @@ html
             button(class='btn', type='submit') Delete All Tournaments
       div(class='center-block')
         h3
-          | Tournaments:
+          | Active Tournaments:
         table(style='margin:0px auto')
           tbody
             each val, key in tournamentData
-              tr
-                td(class='text-center')
-                  form(class='form-inline', role='form', action='/tournament', method='get')
-                    input(type='hidden', name='usr', value=usr)
-                    input(type='hidden', name='id', value=val.tournament.id)
-                    button(class='btn', type='submit') #{val.tournament.name}
+              if (val.tournament.state != 'complete')
+                tr
+                  td(class='text-center')
+                    form(class='form-inline', role='form', action='/tournament', method='get')
+                      input(type='hidden', name='usr', value=usr)
+                      input(type='hidden', name='id', value=val.tournament.id)
+                      button(class='btn', type='submit') #{val.tournament.name}
                 //
                   a(href="tournament?usr=#{usr}&id=#{val.tournament.id}") #{val.tournament.name}

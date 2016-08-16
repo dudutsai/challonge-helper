@@ -127,11 +127,11 @@ router.post('/addParticipant', function(req, res, next) {
 	//console.log('tourneyname = ' + req.body.tournamentName + ' participant = ' + req.body.participant);
 	async.series([
 		function(callback) {
-			tools.addParticipant(req.body.tournamentName, req.body.participant, credentials[req.body.usr], callback);
+			tools.addParticipant(req.body.tournamentId, req.body.participant, credentials[req.body.usr], callback);
 		}
 	], function(err, result) {
 		//console.log('result = ' + result);
-		res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
+		res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
 	});
 });
 
@@ -139,11 +139,11 @@ router.post('/startTournament', function(req, res, next) {
 	//console.log('startTournament call');
 	async.series([
 		function(callback) {
-			tools.startTournament(req.body.tournamentName, credentials[req.body.usr], callback);
+			tools.startTournament(req.body.tournamentId, credentials[req.body.usr], callback);
 		}
 	], function(err, result) {
 		//console.log('result = ' + result);
-		res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
+		res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
 	});
 });
 
@@ -152,7 +152,7 @@ router.post('/startSet', function(req, res, next) {
 	if (activeSets.indexOf(req.body.matchId) == -1) {
 		activeSets.push(parseInt(req.body.matchId));
 	}
-	res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentName);
+	res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
 });
 
 router.post('/reportScore', function(req, res, next) {
