@@ -9,7 +9,8 @@ exports.getTournaments = function(api_key, callback) {
 	// console.log('callback = ' + callback);
 	request({
 		uri: constants.url + '.json?api_key=' + api_key,
-		method: "GET",
+		method: "GET"
+
 	}, 	function(error, response, body) {
 		//console.log('response = ' + JSON.stringify(response));
 		if (response.statusCode == 401) {
@@ -17,6 +18,7 @@ exports.getTournaments = function(api_key, callback) {
 			callback(401, null);
 		}
 		else {
+			//console.log('body = ' + body);
 			callback(null, body, api_key);
 		}
 	});
@@ -136,14 +138,16 @@ exports.createTournament = function(tournamentName, api_key, callback) {
 		var tournamentName = 'TestTourney' + (date.getMonth()+1) + date.getDate() + date.getMinutes() + date.getSeconds();		
 	}
 
-	// console.log('tournamentName = ' + tournamentName);
+	var tournamentUrl = tournamentName.replace(' ', '_');
+
+	console.log('tournamentUrl = ' + tournamentUrl);
 	var options = {
 		uri: constants.url + '.json',
 		method: 'POST',
 		json: {
 			'name':tournamentName,
 			'tournament_type':'double elimination',
-			'url':tournamentName,
+			'url':tournamentUrl,
 			'description':'test description',
 			'open_signup':'false',
 			'api_key':api_key

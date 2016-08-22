@@ -16,11 +16,10 @@ html
           input(type='hidden', name='usr', value=usr)
           input(class='form-control', type='text', name='tournamentName', placeholder='Tournament Name', autofocus) 
         button(class='btn', type='submit') Create Tournament
-      //
-        div
-          form(action='/deleteTournaments', method='post')
-            input(type='hidden', name='usr', value=usr)
-            button(class='btn', type='submit') Delete All Tournaments
+      div
+        form(action='/deleteTournaments', method='post')
+          input(type='hidden', name='usr', value=usr)
+          button(class='btn', type='submit') Delete All Tournaments
       div(class='center-block')
         h3
           | Active Tournaments:
