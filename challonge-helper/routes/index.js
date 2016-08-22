@@ -11,13 +11,14 @@ router.get('/', function(req,res, next) {
 });
 
 router.get('/index', function(req, res, next) {
-	tournamentData = tools.getTournaments(credentials[req.query.usr], function(err, body, api_key) {
+	tournamentData = tools.getTournaments(credentials[req.query.usr], req.query.org, function(err, body, api_key) {
 		//TODO parse body for tournament names here
 		res.render('index', { 
 			title: "Tournament Index",
 			tournamentData: JSON.parse(body),
 			usr: req.query.usr,
-			credentials: credentials
+			credentials: credentials,
+			org: req.query.org
 		});
 	});
 });
@@ -44,6 +45,7 @@ router.get('/tournament', function(req, res) {
     		tournamentData: JSON.parse(result[1]),
     		playerMap: result[2],
     		usr: req.query.usr,
+    		org: req.query.org,
     		credentials: credentials,
     		activeSets: activeSets
     	});
@@ -56,6 +58,7 @@ router.get('/match', function(req, res) {
 
 	res.render('match', {
 		usr: req.query.usr,
+		org: req.query.org,
 		tournamentId: req.query.tournamentId,
 		p1: req.query.p1,
 		p1Id: req.query.p1Id,
@@ -74,7 +77,7 @@ router.post('/testCredentials', function(req, res, next) {
 	if (credentials.indexOf(api_key) == -1) {
 		async.series([
 			function(callback) {
-				tools.getTournaments(api_key, callback);
+				tools.getTournaments(api_key, req.body.org, callback);
 			}
 		], function(err, result) {
 			//console.log('result = ' + result);
@@ -84,7 +87,7 @@ router.post('/testCredentials', function(req, res, next) {
 			}
 			else {
 				credentials[req.body.usr] = api_key;
-				res.redirect('/index?usr=' + req.body.usr);
+				res.redirect('/index?usr=' + req.body.usr + '&org=' + req.body.org);
 			}
 		});
 	}
@@ -94,7 +97,7 @@ router.post('/createTournament', function(req, res, next) {
 	//console.log('createTournament call');
 	async.series([
 		function(callback) {
-			tools.createTournament(req.body.tournamentName, credentials[req.body.usr], callback);
+			tools.createTournament(req.body.tournamentName, credentials[req.body.usr], req.body.org, callback);
 		}
 	], function(err, result) {
 		if (err) {
@@ -103,7 +106,7 @@ router.post('/createTournament', function(req, res, next) {
 
 		}
 		else {
-			res.redirect('/index?usr=' + req.body.usr);					
+			res.redirect('/index?usr=' + req.body.usr + '&org=' + req.body.org);					
 		}
 	});
 });
@@ -113,12 +116,12 @@ router.post('/deleteTournaments', function(req, res, next) {
 	//console.log('apikey= ' + credentials[req.body.usr]);
 	async.waterfall([
 		function(callback) {
-			tools.getTournaments(credentials[req.body.usr], callback);
+			tools.getTournaments(credentials[req.body.usr], req.body.org, callback);
 		},
 		tools.deleteTournaments
 	], function(err, result) {
 		//console.log('result = ' + result);
-		res.redirect('/index?usr=' + req.body.usr);
+		res.redirect('/index?usr=' + req.body.usr + '&org=' + req.body.org);
 	});
 });
 
@@ -131,7 +134,7 @@ router.post('/addParticipant', function(req, res, next) {
 		}
 	], function(err, result) {
 		//console.log('result = ' + result);
-		res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
+		res.redirect('/tournament?usr=' + req.body.usr+ '&org=' + req.body.org + '&id=' + req.body.tournamentId);
 	});
 });
 
@@ -143,7 +146,7 @@ router.post('/startTournament', function(req, res, next) {
 		}
 	], function(err, result) {
 		//console.log('result = ' + result);
-		res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
+		res.redirect('/tournament?usr=' + req.body.usr+ '&org=' + req.body.org + '&id=' + req.body.tournamentId);
 	});
 });
 
@@ -152,7 +155,7 @@ router.post('/startSet', function(req, res, next) {
 	if (activeSets.indexOf(req.body.matchId) == -1) {
 		activeSets.push(parseInt(req.body.matchId));
 	}
-	res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
+	res.redirect('/tournament?usr=' + req.body.usr+ '&org=' + req.body.org + '&id=' + req.body.tournamentId);
 });
 
 router.post('/reportScore', function(req, res, next) {
@@ -169,7 +172,7 @@ router.post('/reportScore', function(req, res, next) {
 			if (index > -1) {
 				activeSets.splice(index, 1);
 			}
-			res.redirect('/tournament?usr=' + req.body.usr+ '&id=' + req.body.tournamentId);
+			res.redirect('/tournament?usr=' + req.body.usr+ '&org=' + req.body.org + '&id=' + req.body.tournamentId);
 		}
 	});
 });

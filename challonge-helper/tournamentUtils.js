@@ -3,23 +3,31 @@ var request = require('request');
 var async = require('async');
 var _ = require('lodash');
 
-exports.getTournaments = function(api_key, callback) {
+exports.getTournaments = function(api_key, org, callback) {
 	// console.log('getTournaments() start!');
 	// console.log('api_key = ' + api_key);
 	// console.log('callback = ' + callback);
-	request({
+	var options = {
 		uri: constants.url + '.json?api_key=' + api_key,
 		method: "GET"
-
-	}, 	function(error, response, body) {
+	};
+	//console.log('org ="' + org + '"');
+	if (org != null && org != '') {
+		options = {
+			uri: constants.url + '.json?api_key=' + api_key + '&subdomain=' + org,
+			method: "GET"
+		};
+	}
+	// console.log('options = ' + JSON.stringify(options));
+	request(options, function(error, response, body) {
 		//console.log('response = ' + JSON.stringify(response));
 		if (response.statusCode == 401) {
 			//console.error('Invalid API key');
 			callback(401, null);
 		}
 		else {
-			//console.log('body = ' + body);
-			callback(null, body, api_key);
+			//console.log('body = ' + JSON.stringify(body));
+			callback(null, body, api_key, org);
 		}
 	});
 };
@@ -99,7 +107,7 @@ exports.getPlayerMapping = function(id, api_key, callback) {
 	});
 };
 
-exports.deleteTournaments = function(tournamentData, api_key, callback) {
+exports.deleteTournaments = function(tournamentData, api_key, org, callback) {
 	//console.log('deleteTournaments() start!');
 	// console.log('tournamentData = ' + tournamentData);
 	// console.log('api_key = ' + api_key);
@@ -111,6 +119,12 @@ exports.deleteTournaments = function(tournamentData, api_key, callback) {
 		var options = {
 			uri: constants.url + '/' + tournament_id + '.json?api_key=' + api_key,
 			method: 'DELETE'
+		}
+		if (org != null && org != '') {
+			var options = {
+				uri: constants.url + '/' + tournament_id + '.json?api_key=' + api_key + '&subdomain=' + org,
+				method: 'DELETE'
+			}
 		}
 		request(options, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
@@ -131,7 +145,7 @@ exports.deleteTournaments = function(tournamentData, api_key, callback) {
 
 };
 
-exports.createTournament = function(tournamentName, api_key, callback) {
+exports.createTournament = function(tournamentName, api_key, org, callback) {
 	//console.log('createTournament() start!');
 	if (tournamentName == '') {
 		var date = new Date();
@@ -141,6 +155,7 @@ exports.createTournament = function(tournamentName, api_key, callback) {
 	var tournamentUrl = tournamentName.replace(' ', '_');
 
 	console.log('tournamentUrl = ' + tournamentUrl);
+	console.log('org = ' + org);
 	var options = {
 		uri: constants.url + '.json',
 		method: 'POST',
@@ -153,8 +168,21 @@ exports.createTournament = function(tournamentName, api_key, callback) {
 			'api_key':api_key
 		}
 	};
+	if (org != null && org != '') {
+		// console.log('got in if');
+		options = {
+			uri: constants.url + '.json?tournament[subdomain]=' + org 
+				+ '&tournament[name]=' + tournamentName
+				+ '&tournament[url]=' + tournamentUrl
+				+ '&tournament[description]=test description'
+				+ '&tournament[tournament_type]=double elimination'
+				+ '&api_key=' + api_key,
+			method: 'POST'
+		};	
+	}
 	request(options, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
+	    // console.log('response = ' + JSON.stringify(response));
 	    //console.log('Tournament sucessfully created'); // Print the shortened url.
 	    callback(null, 'createTournament done');
 	  }

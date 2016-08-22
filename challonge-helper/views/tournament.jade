@@ -13,6 +13,7 @@ html
       div
         form(class='form-inline', action='/index', method='get')
           input(type='hidden', name='usr', value=usr)
+          input(type='hidden', name='org', value=org)
           input(class='btn', type='submit', value='Back To Index', data-transition='fade', data-theme='c')
       div(class='center-block')
         if tournamentData.tournament.state == 'pending'
@@ -20,11 +21,13 @@ html
             input(class='form-control', type='text', name='participant', placeholder='Participant Name', autofocus)
             input(type='hidden' name='tournamentId' value='#{tournamentData.tournament.id}')
             input(type='hidden', name='usr', value=usr)
+            input(type='hidden', name='org', value=org)
             input(class='btn', type='submit', value='Add Participant', data-transition='fade', data-theme='c')
           if playerMap != null
             form(class='form-inline', action='/startTournament', method='post')
               input(type='hidden' name='tournamentId' value='#{tournamentData.tournament.id}')
               input(type='hidden', name='usr', value=usr)
+              input(type='hidden', name='org', value=org)
               input(class='btn', type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
         h3
           a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
@@ -40,6 +43,7 @@ html
                         td
                           form(id='matchForm#{val.id}', role='form', action='/match', method='get')
                             input(type='hidden', name='usr', value=usr)
+                            input(type='hidden', name='org', value=org)
                             input(type='hidden', name='tournamentId', value=tournamentData.tournament.id)
                             input(type='hidden', name='p1', value=playerMap[val.player1_id])
                             input(type='hidden', name='p1Id', value=val.player1_id)
@@ -67,6 +71,7 @@ html
                         form(id='playSetForm#{val.id}', role='form', action='/startSet', method='post')
                           input(type='hidden', name='tournamentId', value=tournamentData.tournament.id)
                           input(type='hidden', name='usr', value=usr)
+                          input(type='hidden', name='org', value=org)
                           input(type='hidden', name='matchId', value=val.id)
                           a(href="#" onclick="document.getElementById('playSetForm#{val.id}').submit()") #{playerMap[val.player1_id]}  vs #{playerMap[val.player2_id]}
           br

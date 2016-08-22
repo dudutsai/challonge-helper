@@ -14,12 +14,15 @@ html
       form(class='form-inline', role='form', action='/createTournament', method='post')
         div(class='form-group')
           input(type='hidden', name='usr', value=usr)
+          input(type='hidden', name='org', value=org)
           input(class='form-control', type='text', name='tournamentName', placeholder='Tournament Name', autofocus) 
         button(class='btn', type='submit') Create Tournament
-      div
-        form(action='/deleteTournaments', method='post')
-          input(type='hidden', name='usr', value=usr)
-          button(class='btn', type='submit') Delete All Tournaments
+      //  
+        div
+          form(action='/deleteTournaments', method='post')
+            input(type='hidden', name='usr', value=usr)
+            input(type='hidden', name='org', value=org)
+            button(class='btn', type='submit') Delete All Tournaments
       div(class='center-block')
         h3
           | Active Tournaments:
@@ -31,6 +34,7 @@ html
                   td(class='text-center')
                     form(class='form-inline', role='form', action='/tournament', method='get')
                       input(type='hidden', name='usr', value=usr)
+                      input(type='hidden', name='org', value=org)
                       input(type='hidden', name='id', value=val.tournament.id)
                       button(class='btn', type='submit') #{val.tournament.name}
                 //
