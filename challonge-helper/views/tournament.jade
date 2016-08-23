@@ -30,7 +30,10 @@ html
               input(type='hidden', name='org', value=org)
               input(class='btn', type='submit', value='Start Tournament', data-transition='fade', data-theme='c')
         h3
-          a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
+          if org == ''
+            a(href="http://challonge.com/#{tournamentData.tournament.url}") Link to challonge page
+          else
+            a(href="http://#{org}.challonge.com/#{tournamentData.tournament.url}") Link to challonge page
         h3  
           if tournamentData.tournament.state == 'underway'
             if activeSets != ''
@@ -84,4 +87,4 @@ html
                   - i++
                   tr
                     td
-                      | #{i}: #{val}
+                      | #{i}. #{val}

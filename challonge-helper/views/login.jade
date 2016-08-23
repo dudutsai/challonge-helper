@@ -12,6 +12,8 @@ html
     nav
     br
     div(class='well col-md-offset-3 col-md-6')
+      button(type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?") 
+        | Click to toggle popover
       button(id='orgBool', type='button', class='btn btn-primary', data-toggle='button', aria-pressed='false', autocomplete='off')
         | Organization
       form(class='form-inline', role='form', action='/testCredentials', method='post') 
